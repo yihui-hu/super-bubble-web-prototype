@@ -9,7 +9,8 @@ import { Controlled as ControlledZoom } from "react-medium-image-zoom";
 import "react-medium-image-zoom/dist/styles.css";
 import "./styles/superBubble.css";
 
-const MAX_WIDTH = 365;
+const IS_MOBILE = window.innerWidth < 2000;
+const MAX_WIDTH = IS_MOBILE ? 300 : 375;
 const VELOCITY_THRESHOLD = 40;
 const WIDTH_THRESHOLD = MAX_WIDTH / 2;
 
@@ -62,8 +63,7 @@ type BubbleProps = {
 };
 
 const Bubble = (props: BubbleProps) => {
-  const { setIndex, index, trigger, setTrigger } =
-    props;
+  const { setIndex, index, trigger, setTrigger } = props;
 
   const textRef = useRef<HTMLDivElement>(null);
   const [height, setHeight] = useState<number>(INITIAL_HEIGHT);
@@ -169,7 +169,7 @@ const Bubble = (props: BubbleProps) => {
 
     return (
       <motion.div
-        className={"pill"}
+        className="pill"
         onClick={() => {
           if (index === currentIndex) {
             setCollapsed(!collapsed);
@@ -182,15 +182,25 @@ const Bubble = (props: BubbleProps) => {
         }}
         style={{
           backgroundColor:
-            index === currentIndex && !collapsed ? "white" : "rgba(255, 255, 255, 0.18)",
+            index === currentIndex && !collapsed
+              ? "white"
+              : "rgba(255, 255, 255, 0.18)",
           outline: "1px solid rgba(255, 255, 255, 0.1)",
         }}
         whileHover={{
           outline: "1px solid rgba(255, 255, 255, 0.4)",
         }}
       >
-        <img className="pillThumbnail" src={imgUrl} />
-        <h4 style={{ color: index === currentIndex && !collapsed ? "#3076ff" : "white" }}>
+        <img
+          className="pillThumbnail"
+          style={{ height: IS_MOBILE ? 14 : 18 }}
+          src={imgUrl}
+        />
+        <h4
+          style={{
+            color: index === currentIndex && !collapsed ? "#3076ff" : "white",
+          }}
+        >
           {imgUrl}
         </h4>
       </motion.div>
@@ -199,7 +209,11 @@ const Bubble = (props: BubbleProps) => {
 
   const TextContent = () => {
     return (
-      <div ref={textRef} className="textContainer" style={{ width: MAX_WIDTH }}>
+      <div
+        ref={textRef}
+        className="textContainer"
+        style={{ width: MAX_WIDTH, fontSize: 12 }}
+      >
         <p>I spent my childhood on Maplestory.</p>
         <p>Here are some images that remind me</p>
         <p>of those times.</p>

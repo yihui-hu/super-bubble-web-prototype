@@ -72,7 +72,6 @@ const Bubble = (props: BubbleProps) => {
     (window.innerHeight - MAX_HEIGHT - textHeight) / 2
   );
   const [dragging, setDragging] = useState<boolean>(false); // Resolve conflicting gestures (tap to zoom, drag to swipe)
-  const [collapsed, setCollapsed] = useState<boolean>(false);
 
   const controls = useAnimation();
   const maskControls = useAnimation();
@@ -171,20 +170,12 @@ const Bubble = (props: BubbleProps) => {
       <motion.div
         className="pill"
         onClick={() => {
-          if (index === currentIndex) {
-            setCollapsed(!collapsed);
-          } else {
-            setCollapsed(false);
-          }
-
           setIndex(currentIndex);
           setTrigger(trigger + 1);
         }}
         style={{
           backgroundColor:
-            index === currentIndex && !collapsed
-              ? "white"
-              : "rgba(255, 255, 255, 0.18)",
+            index === currentIndex ? "white" : "rgba(255, 255, 255, 0.18)",
           outline: "1px solid rgba(255, 255, 255, 0.1)",
         }}
         whileHover={{
@@ -198,7 +189,7 @@ const Bubble = (props: BubbleProps) => {
         />
         <h4
           style={{
-            color: index === currentIndex && !collapsed ? "#3076ff" : "white",
+            color: index === currentIndex ? "#3076ff" : "white",
           }}
         >
           {imgUrl}
@@ -246,78 +237,76 @@ const Bubble = (props: BubbleProps) => {
   );
 
   return (
-    <>
+    <motion.div
+      drag={!isMobile}
+      dragConstraints={{ top: 0, bottom: 0, left: 0, right: 0 }}
+      dragElastic={1}
+      dragTransition={{ bounceStiffness: 200, bounceDamping: 20 }}
+      whileDrag={{
+        scale: 1.05,
+        boxShadow: "rgba(0, 0, 0, 0.24) 0px 40px 90px 8px",
+      }}
+      animate={maskControls}
+      className="superBubble"
+      style={{
+        height: divHeight,
+        width: MAX_WIDTH,
+        top: heightFromTop,
+        left: (window.innerWidth - MAX_WIDTH) / 2,
+      }}
+    >
+      <TextContent />
       <motion.div
-        drag
-        dragConstraints={{ top: 0, bottom: 0, left: 0, right: 0 }}
-        dragElastic={1}
-        dragTransition={{ bounceStiffness: 200, bounceDamping: 20 }}
-        whileDrag={{
-          scale: 1.05,
-          boxShadow: "rgba(0, 0, 0, 0.24) 0px 40px 90px 8px",
-        }}
         animate={maskControls}
-        className="superBubble"
-        style={{
-          height: divHeight,
-          width: MAX_WIDTH,
-          top: heightFromTop,
-          left: (window.innerWidth - MAX_WIDTH) / 2
-        }}
+        className="carouselContainer"
+        style={{ height: divHeight }}
       >
-        <TextContent />
         <motion.div
           animate={maskControls}
-          className="carouselContainer"
-          style={{ height: divHeight }}
+          className="carouselBorder"
+          style={{
+            height: divHeight,
+            width: MAX_WIDTH,
+          }}
+        />
+        <motion.div
+          drag="x"
+          onDrag={onDrag}
+          onDragEnd={onDragEnd}
+          dragConstraints={{
+            // Update constraints as user swipes. Don't allow long swipes to 'skip' to end of carousel.
+            left: -(Math.min(NUM_ITEMS - 1, index + 1) * MAX_WIDTH),
+            right: -(Math.max(0, index - 1) * MAX_WIDTH),
+          }}
+          dragElastic={0.1}
+          initial="first"
+          animate={controls}
+          transition={{ type: "spring", damping: 40, stiffness: 400 }}
+          className="carousel"
+          style={{ width: MAX_WIDTH * NUM_ITEMS }}
         >
-          <motion.div
-            animate={maskControls}
-            className="carouselBorder"
-            style={{
-              height: divHeight,
-              width: MAX_WIDTH,
-            }}
-          />
-          <motion.div
-            drag="x"
-            onDrag={onDrag}
-            onDragEnd={onDragEnd}
-            dragConstraints={{
-              // Update constraints as user swipes. Don't allow long swipes to 'skip' to end of carousel.
-              left: -(Math.min(NUM_ITEMS - 1, index + 1) * MAX_WIDTH),
-              right: -(Math.max(0, index - 1) * MAX_WIDTH),
-            }}
-            dragElastic={0.1}
-            initial="first"
-            animate={controls}
-            transition={{ type: "spring", damping: 40, stiffness: 400 }}
-            className="carousel"
-            style={{ width: MAX_WIDTH * NUM_ITEMS }}
-          >
-            {items.map((item, i) => {
-              return (
-                <ControlledZoom
-                  isZoomed={isZoomed[i]}
-                  onZoomChange={(shouldZoom) => handleZoomChange(shouldZoom, i)}
-                  classDialog="custom-zoom"
-                >
-                  <img
-                    src={item.imgUrl}
-                    style={{
-                      width: MAX_WIDTH,
-                      height: item.height,
-                      cursor: "none",
-                    }}
-                    draggable={false}
-                  />
-                </ControlledZoom>
-              );
-            })}
-          </motion.div>
+          {items.map((item, i) => {
+            return (
+              <ControlledZoom
+                isZoomed={isZoomed[i]}
+                onZoomChange={(shouldZoom) => handleZoomChange(shouldZoom, i)}
+                classDialog="custom-zoom"
+              >
+                <img
+                  src={item.imgUrl}
+                  style={{
+                    width: MAX_WIDTH,
+                    height: item.height,
+                    cursor: "none",
+                  }}
+                  draggable={false}
+                />
+              </ControlledZoom>
+            );
+          })}
         </motion.div>
       </motion.div>
-    </>
+    </motion.div>
   );
 };
 

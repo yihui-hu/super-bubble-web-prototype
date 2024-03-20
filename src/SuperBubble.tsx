@@ -212,7 +212,7 @@ const Bubble = (props: BubbleProps) => {
       <div
         ref={textRef}
         className="textContainer"
-        style={{ width: MAX_WIDTH, fontSize: 12 }}
+        style={{ width: MAX_WIDTH, fontSize: isMobile ? 12 : 16 }}
       >
         <p>I spent my childhood on Maplestory.</p>
         <p>Here are some images that remind me</p>
@@ -248,6 +248,14 @@ const Bubble = (props: BubbleProps) => {
   return (
     <>
       <motion.div
+        drag
+        dragConstraints={{ top: 0, bottom: 0, left: 0, right: 0 }}
+        dragElastic={1}
+        dragTransition={{ bounceStiffness: 200, bounceDamping: 20 }}
+        whileDrag={{
+          scale: 1.05,
+          boxShadow: "rgba(0, 0, 0, 0.24) 0px 40px 90px 8px",
+        }}
         animate={maskControls}
         className="superBubble"
         style={{
@@ -341,6 +349,8 @@ const SuperBubble = () => {
       });
   }, []);
 
+  // TODO: Display loading...
+  // TODO: Animate in bubble
   return !loading ? (
     <div className="container">
       <Bubble

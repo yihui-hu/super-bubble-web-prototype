@@ -8,7 +8,7 @@ import "./styles/index.css";
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
     <SuperBubble />
-    {isMobile ? (
+    {!isMobile ? (
       <AnimatedCursor
         innerSize={40}
         outerSize={0}

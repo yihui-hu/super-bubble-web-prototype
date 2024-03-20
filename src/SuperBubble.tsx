@@ -8,9 +8,9 @@ import {
 import { Controlled as ControlledZoom } from "react-medium-image-zoom";
 import "react-medium-image-zoom/dist/styles.css";
 import "./styles/superBubble.css";
+import { isMobile } from "react-device-detect";
 
-const IS_MOBILE = window.innerWidth < 2000;
-const MAX_WIDTH = IS_MOBILE ? 300 : 375;
+const MAX_WIDTH = isMobile ? 300 : 375;
 const VELOCITY_THRESHOLD = 40;
 const WIDTH_THRESHOLD = MAX_WIDTH / 2;
 
@@ -193,7 +193,7 @@ const Bubble = (props: BubbleProps) => {
       >
         <img
           className="pillThumbnail"
-          style={{ height: IS_MOBILE ? 14 : 18 }}
+          style={{ height: isMobile ? 14 : 18 }}
           src={imgUrl}
         />
         <h4
@@ -248,14 +248,6 @@ const Bubble = (props: BubbleProps) => {
   return (
     <>
       <motion.div
-        drag
-        dragConstraints={{ top: 0, bottom: 0, left: 0, right: 0 }}
-        dragElastic={1}
-        dragTransition={{ bounceStiffness: 200, bounceDamping: 20 }}
-        whileDrag={{
-          scale: 1.05,
-          boxShadow: "rgba(0, 0, 0, 0.24) 0px 40px 90px 8px",
-        }}
         animate={maskControls}
         className="superBubble"
         style={{

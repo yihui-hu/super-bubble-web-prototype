@@ -262,6 +262,7 @@ const Bubble = (props: BubbleProps) => {
           height: divHeight,
           width: MAX_WIDTH,
           top: heightFromTop,
+          left: (window.innerWidth - MAX_WIDTH) / 2
         }}
       >
         <TextContent />

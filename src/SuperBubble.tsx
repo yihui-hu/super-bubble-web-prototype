@@ -55,8 +55,6 @@ const maskControlsItems = items.map((item) => {
 });
 
 type BubbleProps = {
-  setVelocityX: (velocityX: number) => void;
-  setOffsetX: (velocityX: number) => void;
   setIndex: (index: number) => void;
   index: number;
   trigger: number;
@@ -64,7 +62,7 @@ type BubbleProps = {
 };
 
 const Bubble = (props: BubbleProps) => {
-  const { setVelocityX, setOffsetX, setIndex, index, trigger, setTrigger } =
+  const { setIndex, index, trigger, setTrigger } =
     props;
 
   const textRef = useRef<HTMLDivElement>(null);
@@ -124,11 +122,7 @@ const Bubble = (props: BubbleProps) => {
   // Dynamically change heights when user is dragging
   const onDrag = (_: any, info: PanInfo) => {
     setDragging(true);
-    const velocityX = info.velocity.x;
     const offsetX = info.offset.x;
-
-    setVelocityX(velocityX);
-    setOffsetX(offsetX);
 
     // Negative offset indicates swipe to right
     if (offsetX < 0) {
@@ -313,8 +307,6 @@ const Bubble = (props: BubbleProps) => {
 };
 
 const SuperBubble = () => {
-  const [velocityX, setVelocityX] = useState<number>(0);
-  const [offsetX, setOffsetX] = useState<number>(0);
   const [index, setIndex] = useState<number>(0);
   const [trigger, setTrigger] = useState<number>(0); // TODO: Move to Bubble
   const [loading, setLoading] = useState<boolean>(true);
@@ -346,8 +338,6 @@ const SuperBubble = () => {
   return !loading ? (
     <div className="container">
       <Bubble
-        setVelocityX={setVelocityX}
-        setOffsetX={setOffsetX}
         setIndex={setIndex}
         index={index}
         trigger={trigger}

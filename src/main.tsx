@@ -1,16 +1,12 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
 import AnimatedCursor from "react-animated-cursor";
-import SuperBubbleExpand from "./SuperBubbleExpand.tsx";
-import SuperBubbleCarousel from "./SuperBubbleCarousel.tsx";
 import SuperBubble from "./SuperBubble.tsx";
 import "./styles/index.css"
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
     <SuperBubble />
-    {/* <SuperBubbleCarousel /> */}
-    {/* <SuperBubbleExpand /> */}
     <AnimatedCursor
       innerSize={40}
       outerSize={0}

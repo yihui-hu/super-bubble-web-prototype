@@ -104,7 +104,7 @@ const TextContent = () => {
       }}
     >
       <Pill attachment={items[0]} />
-      <p>Text in between pill</p>
++     <p>Text in between pill</p>
       <Pill attachment={items[1]} />
       <Pill attachment={items[2]} />
     </div>

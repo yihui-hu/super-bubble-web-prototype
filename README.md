@@ -32,7 +32,7 @@ interface Attachment {
 
 Once you've figured out what you want to put in those fields, add it to the `items` array found near the top of the file:
 
-```typescript
+```diff
 // Media items / attachments
 const items: [Attachment] = [
   {
@@ -60,7 +60,7 @@ const items: [Attachment] = [
 
 2. Now that you've added your item, it's time to generate the pill for it. In this block of code, `TextContent`, add the `<Pill>` component at the end, and pass it the correct attachment in the `items` array.
 
-```typescript
+```diff
 // Text content of super bubble, with pills
 const TextContent = () => {
   return (
@@ -122,7 +122,7 @@ enum AttachmentType {
   Image,
   Link,
   Document,
-  Video,,
+  Video,
 }
 ```
 
@@ -130,7 +130,9 @@ To support these new `AttachmentType`s, we'll need to modify other components so
 
 ### Pills:
 
-```typescript
+In the `<Pill>` component, it's made up primarily two parts: the `thumbnailComponent` and `attachment.pillText`. We'll want to create a new case for the `thumbnailComponent` to handle our new `AttachmentType` as follows:
+
+```diff
 switch (attachment.type) {
   case AttachmentType.Image:
     thumbnailComponent = (
@@ -146,11 +148,50 @@ switch (attachment.type) {
     thumbnailComponent = // component for links;
     break;
 + case AttachmentType.Document:
-+   thumbnailComponent = // component for documents;
++   thumbnailComponent = // create a new tsx component for documents;
 +   break;
   default:
     thumbnailComponent = null;
     break;
 }
+```
+
+### Carousel preview:
+
+And for the carousel preview, look for the section `// Main super bubble component`, and find the block of code where we're mapping over our array of `items`:
+
+```diff
+{items.map((item, i) => {
+  switch (item.type) {
+    /// Preview component for images
+    case AttachmentType.Image:
+      return (
+        <ControlledZoom
+          isZoomed={isZoomed[i]}
+          onZoomChange={(shouldZoom) =>
+            handleZoomChange(shouldZoom, i)
+          }
+          classDialog="custom-zoom"
+        >
+          <img
+            src={item.imgUrl}
+            style={{
+              width: MAX_WIDTH,
+              height: item.height,
+              cursor: "none",
+            }}
+            draggable={false}
+          />
+        </ControlledZoom>
+      );
+    /// Preview component for links
+    case AttachmentType.Link:
+      return <div>This is my link preview</div>
++   case AttachmentType.Document:
++     // return preview component for documents
+    default:
+      null;
+  }
+})}
 ```
 

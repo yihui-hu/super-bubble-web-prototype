@@ -13,33 +13,103 @@ import { isMobile } from "react-device-detect";
 const MAX_WIDTH = isMobile ? 300 : 375;
 const VELOCITY_THRESHOLD = 40;
 const WIDTH_THRESHOLD = MAX_WIDTH / 2;
+const LINK_PREVIEW_HEIGHT = isMobile ? 132 : 148;
 
 enum Swipe {
   toLeft,
   toRight,
 }
 
+enum AttachmentType {
+  Image,
+  Link,
+}
+
+interface Attachment {
+  type: AttachmentType;
+  height: number;
+  imgUrl: string; // For image to display in pill, use local SVGs / PNGs for icons or images
+  url: string | undefined; // For links, so undefined for other attachmentTypes
+  title: string;
+  pillText: string;
+  description: string;
+}
+
 // Media items / attachments
-const items = [
+const items: [Attachment] = [
   {
-    height: (MAX_WIDTH / 679) * 720,
-    imgUrl: "magic_library.png",
+    type: AttachmentType.Image,
+    height: (MAX_WIDTH / 2395) * 3583,
+    imgUrl: "vibes.webp",
+    title: "vibes.webp",
+    description: "vibes.webp",
+    pillText: "vibes.webp",
+    url: undefined,
   },
   {
-    height: (MAX_WIDTH / 838) * 517,
-    imgUrl: "showa_town_sauna.png",
+    type: AttachmentType.Image,
+    height: (MAX_WIDTH / 3583) * 2395,
+    imgUrl: "studio.webp",
+    title: "studio.webp",
+    description: "studio.webp",
+    pillText: "studio.webp",
+    url: undefined,
   },
   {
-    height: (MAX_WIDTH / 217) * 219,
-    imgUrl: "magic_booster.gif",
+    type: AttachmentType.Image,
+    height: (MAX_WIDTH / 2395) * 3583,
+    imgUrl: "art_in_studio.webp",
+    title: "art_in_studio.webp",
+    description: "art_in_studio.webp",
+    pillText: "art_in_studio.webp",
+    url: undefined,
   },
   {
-    height: (MAX_WIDTH / 960) * 856,
-    imgUrl: "free_market.jpeg",
+    type: AttachmentType.Image,
+    height: (MAX_WIDTH / 3583) * 2395,
+    imgUrl: "standing.webp",
+    title: "standing.webp",
+    description: "standing.webp",
+    pillText: "standing.webp",
+    url: undefined,
   },
   {
-    height: (MAX_WIDTH / 800) * 600,
-    imgUrl: "remnant_of_the_goddess.png",
+    type: AttachmentType.Image,
+    height: (MAX_WIDTH / 3583) * 2395,
+    imgUrl: "homies.webp",
+    title: "homies.webp",
+    description: "homies.webp",
+    pillText: "homies.webp",
+    url: undefined,
+  },
+  {
+    type: AttachmentType.Link,
+    height: LINK_PREVIEW_HEIGHT,
+    imgUrl: "typo.svg",
+    title: "Typo*",
+    description:
+      "The messenger is the killer mobile app, and we are reimagining it as the ultimate creative app. Typo is communication designed for creation.",
+    pillText: "typo.by",
+    url: "https://typo.by",
+  },
+  {
+    type: AttachmentType.Link,
+    height: LINK_PREVIEW_HEIGHT - (isMobile ? 34 : 44),
+    imgUrl: "instagram.png",
+    title: "Typo* on Instagram",
+    description: "A more ~editorial~ POV",
+    pillText: "instagram.com",
+    url: "https://instagram.com/tyyyyyyyyyyypo",
+  },
+  {
+    type: AttachmentType.Link,
+    height: LINK_PREVIEW_HEIGHT - (isMobile ? 18 : 22),
+    imgUrl: "youtube.webp",
+    title: "Typo* on YouTube",
+    description:
+      "Check out our vlogs for a BTS look at how we're building the company",
+    pillText: "youtube.com",
+    url: "https://www.youtube.com/@tyyyyyyyyyyypo",
   },
 ].map((item, index) => ({
   ...item,
@@ -95,12 +165,12 @@ const Bubble = (props: BubbleProps) => {
   }, []);
 
   const getCurrentHeight = (swipeDirection: Swipe, offsetX: number) => {
-    let beginningIndex = index;
-    let endingIndex = swipeDirection === Swipe.toLeft ? index + 1 : index - 1;
-    let beginningHeight = items[beginningIndex].height;
-    let endingHeight = items[endingIndex].height;
+    const beginningIndex = index;
+    const endingIndex = swipeDirection === Swipe.toLeft ? index + 1 : index - 1;
+    const beginningHeight = items[beginningIndex].height;
+    const endingHeight = items[endingIndex].height;
 
-    let currentHeight =
+    const currentHeight =
       beginningHeight > endingHeight
         ? beginningHeight -
           Math.abs(
@@ -157,14 +227,51 @@ const Bubble = (props: BubbleProps) => {
     setDragging(false);
   };
 
-  // Pill content
   interface PillProps {
-    imgUrl: string;
+    attachment: Attachment;
   }
 
+  // Pill component
   const Pill = (props: PillProps) => {
-    const { imgUrl } = props;
-    const currentIndex = items.findIndex((item) => item.imgUrl === imgUrl);
+    const { attachment } = props;
+    const currentIndex = items.findIndex(
+      (item) => item.imgUrl === attachment.imgUrl
+    );
+
+    let thumbnailComponent;
+
+    switch (attachment.type) {
+      case AttachmentType.Link:
+        thumbnailComponent = (
+          <div
+            className="pillThumbnailContainer"
+            style={{
+              height: isMobile ? 12 : 16,
+              width: isMobile ? 12 : 16,
+            }}
+          >
+            <img
+              style={{ height: isMobile ? 10 : 14 }}
+              src={attachment.imgUrl ? attachment.imgUrl : "link.svg"}
+              alt="Link Thumbnail"
+            />
+          </div>
+        );
+        break;
+      case AttachmentType.Image:
+        thumbnailComponent = (
+          <img
+            className="pillThumbnail"
+            style={{ height: isMobile ? 14 : 18 }}
+            src={attachment.imgUrl}
+            alt="Image Thumbnail"
+          />
+        );
+        break;
+      default:
+        thumbnailComponent = null;
+        break;
+    }
 
     return (
       <motion.div
@@ -182,22 +289,19 @@ const Bubble = (props: BubbleProps) => {
           outline: "1px solid rgba(255, 255, 255, 0.4)",
         }}
       >
-        <img
-          className="pillThumbnail"
-          style={{ height: isMobile ? 14 : 18 }}
-          src={imgUrl}
-        />
+        {thumbnailComponent}
         <h4
           style={{
             color: index === currentIndex ? "#3076ff" : "white",
           }}
         >
-          {imgUrl}
+          {attachment.pillText}
         </h4>
       </motion.div>
     );
   };
 
+  // Text content of super bubble, with pills
   const TextContent = () => {
     return (
       <div
@@ -205,16 +309,17 @@ const Bubble = (props: BubbleProps) => {
         className="textContainer"
         style={{ width: MAX_WIDTH, fontSize: isMobile ? 12 : 16 }}
       >
-        <p>I spent my childhood on Maplestory.</p>
-        <p>Here are some images that remind me</p>
-        <p>of those times.</p>
-        <Pill imgUrl={items[0].imgUrl} />
-        <Pill imgUrl={items[1].imgUrl} />
-        <Pill imgUrl={items[2].imgUrl} />
-        <p>Also this meme is </p>
-        <p>pretty funny lol</p>
-        <Pill imgUrl={items[3].imgUrl} />
-        <Pill imgUrl={items[4].imgUrl} />
+        <p>We work together in IRL in Soho, NYC.</p>
+        <p>Our office doubles as an art studio, film</p>
+        <p>set, and all-around creative space.</p>
+        <Pill attachment={items[0]} />
+        <Pill attachment={items[1]} />
+        <Pill attachment={items[2]} />
+        <Pill attachment={items[3]} />
+        <Pill attachment={items[4]} />
+        <Pill attachment={items[5]} />
+        <Pill attachment={items[6]} />
+        <Pill attachment={items[7]} />
       </div>
     );
   };
@@ -236,6 +341,7 @@ const Bubble = (props: BubbleProps) => {
     [dragging]
   );
 
+  // Main super bubble component
   return (
     <motion.div
       drag={!isMobile}
@@ -255,7 +361,9 @@ const Bubble = (props: BubbleProps) => {
         left: (window.innerWidth - MAX_WIDTH) / 2,
       }}
     >
+      {/* Text content of super bubble */}
       <TextContent />
+      {/* Carousel of attachments */}
       <motion.div
         animate={maskControls}
         className="carouselContainer"
@@ -286,23 +394,89 @@ const Bubble = (props: BubbleProps) => {
           style={{ width: MAX_WIDTH * NUM_ITEMS }}
         >
           {items.map((item, i) => {
-            return (
-              <ControlledZoom
-                isZoomed={isZoomed[i]}
-                onZoomChange={(shouldZoom) => handleZoomChange(shouldZoom, i)}
-                classDialog="custom-zoom"
-              >
-                <img
-                  src={item.imgUrl}
-                  style={{
-                    width: MAX_WIDTH,
-                    height: item.height,
-                    cursor: "none",
-                  }}
-                  draggable={false}
-                />
-              </ControlledZoom>
-            );
+            switch (item.type) {
+              /// Preview component for images
+              case AttachmentType.Image:
+                return (
+                  <ControlledZoom
+                    isZoomed={isZoomed[i]}
+                    onZoomChange={(shouldZoom) =>
+                      handleZoomChange(shouldZoom, i)
+                    }
+                    classDialog="custom-zoom"
+                  >
+                    <img
+                      src={item.imgUrl}
+                      style={{
+                        width: MAX_WIDTH,
+                        height: item.height,
+                        cursor: "none",
+                      }}
+                      draggable={false}
+                    />
+                  </ControlledZoom>
+                );
+              /// Preview component for links
+              case AttachmentType.Link:
+                return (
+                  <div
+                    className="linkPreviewContainer"
+                    style={{ width: MAX_WIDTH, height: LINK_PREVIEW_HEIGHT }}
+                  >
+                    <div
+                      className="linkPreviewHeader"
+                      style={{ width: MAX_WIDTH - 32 }}
+                    >
+                      {" "}
+                      {/* -32 is for padding */}
+                      <div
+                        style={{
+                          display: "flex",
+                          flexDirection: "row",
+                          gap: 8,
+                          alignItems: "center",
+                        }}
+                      >
+                        <div className="linkPreviewThumbnailContainer">
+                          <img
+                            className="linkPreviewThumbnailImg"
+                            src={item.imgUrl}
+                            draggable={false}
+                          />
+                        </div>
+                        <h2
+                          className="linkPreviewTitle"
+                          style={{ fontSize: isMobile ? 12 : 16 }}
+                        >
+                          {item.title}
+                        </h2>
+                      </div>
+                      <a
+                        href={item.url}
+                        style={{ color: "black", textDecoration: "none" }}
+                        target="_blank"
+                      >
+                        <div className="linkPreviewVisitContainer">
+                          <h2
+                            className="linkPreviewVisitText"
+                            style={{ fontSize: isMobile ? 12 : 16 }}
+                          >
+                            Visit ↗
+                          </h2>
+                        </div>
+                      </a>
+                    </div>
+                    <h2
+                      className="linkPreviewDescription"
+                      style={{ fontSize: isMobile ? 12 : 16 }}
+                    >
+                      {item.description}
+                    </h2>
+                  </div>
+                );
+              default:
+                null;
+            }
           })}
         </motion.div>
       </motion.div>
@@ -331,7 +505,9 @@ const SuperBubble = () => {
       })
     )
       .then(() => {
-        setLoading(false);
+        setTimeout(() => {
+          setLoading(false);
+        }, 2000);
       })
       .catch((error) => {
         console.error("Error loading images:", error);
@@ -339,18 +515,31 @@ const SuperBubble = () => {
       });
   }, []);
 
-  // TODO: Display loading...
-  // TODO: Animate in bubble
   return !loading ? (
-    <div className="container">
+    <motion.div
+      className="container"
+      initial={{
+        opacity: 0,
+        filter: "blur(4px)",
+      }}
+      animate={{
+        opacity: 1,
+        filter: "blur(0px)",
+        transition: { type: "spring", duration: 0.7 },
+      }}
+    >
       <Bubble
         setIndex={setIndex}
         index={index}
         trigger={trigger}
         setTrigger={setTrigger}
       />
+    </motion.div>
+  ) : (
+    <div className="container">
+      <h4 className="loadingText">Loading...</h4>
     </div>
-  ) : null;
+  );
 };
 
 export default SuperBubble;

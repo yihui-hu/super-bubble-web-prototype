@@ -87,17 +87,17 @@ const CarouselDiv = (props: CarouselDivProps) => {
       beginningHeight > endingHeight
         ? beginningHeight -
           Math.abs(
-            offsetX * (Math.abs(beginningHeight - endingHeight) / MAX_WIDTH)
+            offsetX * (Math.abs(beginningHeight - endingHeight) / MAX_WIDTH),
           )
         : beginningHeight +
           Math.abs(
-            offsetX * (Math.abs(beginningHeight - endingHeight) / MAX_WIDTH)
+            offsetX * (Math.abs(beginningHeight - endingHeight) / MAX_WIDTH),
           );
 
     // Clamping function to constrain heights to proper bounds
     return Math.min(
       Math.max(currentHeight, Math.min(beginningHeight, endingHeight)),
-      Math.max(beginningHeight, endingHeight)
+      Math.max(beginningHeight, endingHeight),
     );
   };
 
@@ -235,7 +235,7 @@ const SuperBubbleCarousel = () => {
           img.onerror = reject;
           img.src = image;
         });
-      })
+      }),
     )
       .then(() => {
         setLoading(false);

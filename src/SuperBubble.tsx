@@ -39,11 +39,11 @@ interface Attachment {
 const items: [Attachment] = [
   {
     type: AttachmentType.Image,
-    height: (MAX_WIDTH / 2395) * 3583,
-    imgUrl: "vibes.webp",
-    title: "vibes.webp",
-    description: "vibes.webp",
-    pillText: "vibes.webp",
+    height: (MAX_WIDTH / 2300) * 2300,
+    imgUrl: "vibes.png",
+    title: "vibes.png",
+    description: "vibes.png",
+    pillText: "vibes.png",
     url: undefined,
   },
   {
@@ -57,11 +57,11 @@ const items: [Attachment] = [
   },
   {
     type: AttachmentType.Image,
-    height: (MAX_WIDTH / 2395) * 3583,
-    imgUrl: "art_in_studio.webp",
-    title: "art_in_studio.webp",
-    description: "art_in_studio.webp",
-    pillText: "art_in_studio.webp",
+    height: (MAX_WIDTH / 2300) * 2300,
+    imgUrl: "art_in_studio.png",
+    title: "art_in_studio.png",
+    description: "art_in_studio.png",
+    pillText: "art_in_studio.png",
     url: undefined,
   },
   {

@@ -5,15 +5,15 @@
 1. Everything you need can be found in `SuperBubble.tsx`. Navigate to that file, and to add an item/attachment you want that conforms to the type `Attachment`, i.e. it should contain the following fields:
 
 ```typescript
-  interface Attachment {
-    type: AttachmentType;
-    height: number;
-    imgUrl: string;
-    url: string | undefined;
-    title: string;
-    description: string;
-    pillText: string;
-  }
+interface Attachment {
+  type: AttachmentType;
+  height: number;
+  imgUrl: string;
+  url: string | undefined;
+  title: string;
+  description: string;
+  pillText: string;
+}
 ```
 
 - `type` determines what kind of attachment preview to show in the carousel. For now, there's only `Link` and `Image` as part of the `AttachmentType` enum, but can and should be expanded in the future.
@@ -22,7 +22,7 @@
 
 - `imgUrl` is the local URL of images, in this case those found in the `public` folder. For links, this is usually the favicon.
 
-- `url` is undefined for images, but provide one for links.
+- `url` should be undefined for images, but provide one for links.
 
 - `title` is primarily used for link previews, to show the website/article title.
 
@@ -44,16 +44,15 @@ const items: [Attachment] = [
     pillText: "vibes.png",
     url: undefined,
   },
-  {
-    type: AttachmentType.Link,
-    height: LINK_PREVIEW_HEIGHT,
-    imgUrl: "typo.svg",
-    title: "Typo*",
-    description: "Typo* is reimagining the messaging app.",
-    pillText: "typo.by",
-    url: "https://typo.by",
-  },
-  // ... more items here ...
++ {
++   type: AttachmentType.Link,
++   height: LINK_PREVIEW_HEIGHT,
++   imgUrl: "typo.svg",
++   title: "Typo*",
++   description: "Typo* is reimagining the messaging app.",
++   pillText: "typo.by",
++   url: "https://typo.by",
++ },
 ]
 ```
 
@@ -83,8 +82,7 @@ const TextContent = () => {
       <Pill attachment={items[4]} />
       <Pill attachment={items[5]} />
       <Pill attachment={items[6]} />
-      <Pill attachment={items[7]} />
-      // ... add pill here ...
++     <Pill attachment={items[7]} />
     </div>
   );
 };
@@ -114,6 +112,45 @@ const TextContent = () => {
 
 but make sure it still looks okay on the site. I break the text up into multiple `<p>` above just so I can achieve a more precise layout.
 
-***
 
-3. 
+## Making changes
+
+For now we support links and images, but if we want to support other types of attachments, like documents, we can add a new type to the enum `AttachmentType`:
+
+```typescript
+enum AttachmentType {
+  Image,
+  Link,
+  Document,
+  Video,,
+}
+```
+
+To support these new `AttachmentType`s, we'll need to modify other components so their pills / carousel previews are rendered as expected.
+
+### Pills:
+
+```typescript
+switch (attachment.type) {
+  case AttachmentType.Image:
+    thumbnailComponent = (
+      <img
+        className="pillThumbnail"
+        style={{ height: isMobile ? 14 : 18 }}
+        src={attachment.imgUrl}
+        alt="Image Thumbnail"
+      />
+    );
+    break;
+  case AttachmentType.Link:
+    thumbnailComponent = // component for links;
+    break;
++ case AttachmentType.Document:
++   thumbnailComponent = // component for documents;
++   break;
+  default:
+    thumbnailComponent = null;
+    break;
+}
+```
+

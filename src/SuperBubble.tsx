@@ -132,6 +132,8 @@ type BubbleProps = {
   setTrigger: (trigger: number) => void;
 };
 
+/// Bubble is the main component that draws the super bubble
+/// and basically contains all the logic required for it
 const Bubble = (props: BubbleProps) => {
   const { setIndex, index, trigger, setTrigger } = props;
 
@@ -483,6 +485,8 @@ const Bubble = (props: BubbleProps) => {
   );
 };
 
+/// Wrapper for the Bubble component that handles
+/// image preloading and appear in view transitions
 const SuperBubble = () => {
   const [index, setIndex] = useState<number>(0);
   const [trigger, setTrigger] = useState<number>(0); // TODO: Move to Bubble

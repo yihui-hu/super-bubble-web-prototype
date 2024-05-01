@@ -427,7 +427,6 @@ const Bubble = (props: BubbleProps) => {
                       className="linkPreviewHeader"
                       style={{ width: MAX_WIDTH - 32 }}
                     >
-                      {" "}
                       {/* -32 is for padding */}
                       <div
                         style={{

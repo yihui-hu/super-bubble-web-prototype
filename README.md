@@ -2,7 +2,7 @@
 
 ### Adding attachments to the super bubble:
 
-1. Everything you need can be found in `SuperBubble.tsx`. Navigate to that file, and to add an item/attachment you want that conforms to the type `Attachment`, i.e. it should contain the following fields:
+1. Everything you need is in `SuperBubble.tsx`. Navigate to that file, and to add an item/attachment, it should conform to the type `Attachment`, i.e. it should contain the following fields:
 
 ```typescript
 interface Attachment {
@@ -30,7 +30,7 @@ interface Attachment {
 
 - `pillText` is the string you want to display on the pills. For images, using the filename is usually fine, but for links, if the URL is long, you might want to use a custom `pillText` that is shorter.
 
-Once you've figured out what you want to put in those fields, add it to the `items` array found near the top of the file:
+Once you know what to put in those fields, add it to the `items` array found near the top of the file like so:
 
 ```diff
 // Media items / attachments
@@ -56,9 +56,11 @@ const items: [Attachment] = [
 ]
 ```
 
+And of course make sure that `imgUrl`s point to files in the public folder or assets hosted on the web, like in AWS.
+
 ***
 
-2. Now that you've added your item, it's time to generate the pill for it. In this block of code, `TextContent`, add the `<Pill>` component at the end, and pass it the correct attachment in the `items` array.
+2. Now that you've added your attachment to the `items` array, it's time to generate the pill for it. In this block of code, `TextContent`, add the `<Pill>` component at the end, and pass it the correct attachment in the `items` array.
 
 ```diff
 // Text content of super bubble, with pills
@@ -88,7 +90,7 @@ const TextContent = () => {
 };
 ```
 
-You can also intersperse text between the pills with the `<p>` tag:
+Side note: you can also intersperse text between the pills with the `<p>` tag:
 
 ```typescript
 const TextContent = () => {
@@ -110,7 +112,7 @@ const TextContent = () => {
 };
 ```
 
-but make sure it still looks okay on the site. I break the text up into multiple `<p>` above just so I can achieve a more precise layout.
+but make sure it still looks okay on the site, on both desktop and mobile. Also, I break the text up into multiple `<p>` as shown above, to achieve a more precise layout of text and pills.
 
 
 ## Making changes

@@ -119,12 +119,11 @@ but make sure it still looks okay on the site, on both desktop and mobile. Also,
 
 For now we support links and images, but if we want to support other types of attachments, like documents, we can add a new type to the enum `AttachmentType`:
 
-```typescript
+```diff
 enum AttachmentType {
   Image,
   Link,
-  Document,
-  Video,
++ Document,
 }
 ```
 
@@ -132,7 +131,7 @@ To support these new `AttachmentType`s, we'll need to modify other components so
 
 ### Pills:
 
-In the `<Pill>` component, it's made up primarily two parts: the `thumbnailComponent` and `attachment.pillText`. We'll want to create a new case for the `thumbnailComponent` to handle our new `AttachmentType` as follows:
+In the `<Pill>` component, it's made up of primarily two parts: the `thumbnailComponent` and `attachment.pillText`. We'll want to create a new case for the `thumbnailComponent` to handle our new `AttachmentType` as follows:
 
 ```diff
 switch (attachment.type) {
@@ -196,4 +195,4 @@ And for the carousel preview, look for the section `// Main super bubble compone
   }
 })}
 ```
-
+Like pills, we'll want to return a new `tsx` component that renders our new attachment type correctly.

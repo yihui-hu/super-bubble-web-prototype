@@ -92,7 +92,7 @@ const TextContent = () => {
 
 Side note: you can also intersperse text between the pills with the `<p>` tag:
 
-```typescript
+```diff
 const TextContent = () => {
   return (
     <div

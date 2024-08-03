@@ -40,7 +40,7 @@ const items: [Attachment] = [
   {
     type: AttachmentType.Image,
     height: (MAX_WIDTH / 2300) * 2300,
-    imgUrl: "vibes.png",
+    imgUrl: "https://yihui-work.s3.us-east-2.amazonaws.com/typo-super-bubble/vibes.png",
     title: "vibes.png",
     description: "vibes.png",
     pillText: "vibes.png",
@@ -49,7 +49,7 @@ const items: [Attachment] = [
   {
     type: AttachmentType.Image,
     height: (MAX_WIDTH / 3583) * 2395,
-    imgUrl: "studio.webp",
+    imgUrl: "https://yihui-work.s3.us-east-2.amazonaws.com/typo-super-bubble/studio.webp",
     title: "studio.webp",
     description: "studio.webp",
     pillText: "studio.webp",
@@ -58,7 +58,7 @@ const items: [Attachment] = [
   {
     type: AttachmentType.Image,
     height: (MAX_WIDTH / 2300) * 2300,
-    imgUrl: "art_in_studio.png",
+    imgUrl: "https://yihui-work.s3.us-east-2.amazonaws.com/typo-super-bubble/art_in_studio.png",
     title: "art_in_studio.png",
     description: "art_in_studio.png",
     pillText: "art_in_studio.png",
@@ -67,7 +67,7 @@ const items: [Attachment] = [
   {
     type: AttachmentType.Image,
     height: (MAX_WIDTH / 3583) * 2395,
-    imgUrl: "standing.webp",
+    imgUrl: "https://yihui-work.s3.us-east-2.amazonaws.com/typo-super-bubble/standing.webp",
     title: "standing.webp",
     description: "standing.webp",
     pillText: "standing.webp",
@@ -76,7 +76,7 @@ const items: [Attachment] = [
   {
     type: AttachmentType.Image,
     height: (MAX_WIDTH / 3583) * 2395,
-    imgUrl: "homies.webp",
+    imgUrl: "https://yihui-work.s3.us-east-2.amazonaws.com/typo-super-bubble/homies.webp",
     title: "homies.webp",
     description: "homies.webp",
     pillText: "homies.webp",
@@ -95,7 +95,7 @@ const items: [Attachment] = [
   {
     type: AttachmentType.Link,
     height: LINK_PREVIEW_HEIGHT - (isMobile ? 34 : 44),
-    imgUrl: "instagram.png",
+    imgUrl: "https://yihui-work.s3.us-east-2.amazonaws.com/typo-super-bubble/instagram.png",
     title: "Typo* on Instagram",
     description: "A more ~editorial~ POV",
     pillText: "instagram.com",
@@ -104,7 +104,7 @@ const items: [Attachment] = [
   {
     type: AttachmentType.Link,
     height: LINK_PREVIEW_HEIGHT - (isMobile ? 18 : 22),
-    imgUrl: "youtube.webp",
+    imgUrl: "https://yihui-work.s3.us-east-2.amazonaws.com/typo-super-bubble/youtube.webp",
     title: "Typo* on YouTube",
     description:
       "Check out our vlogs for a BTS look at how we're building the company",
@@ -311,7 +311,7 @@ const Bubble = (props: BubbleProps) => {
         className="textContainer"
         style={{ width: MAX_WIDTH, fontSize: isMobile ? 12 : 16 }}
       >
-        <p>We work together in IRL in Soho, NYC.</p>
+        <p>We work together IRL in Soho, NYC.</p>
         <p>Our office doubles as an art studio, film</p>
         <p>set, and all-around creative space.</p>
         <Pill attachment={items[0]} />

@@ -94,8 +94,9 @@ video {
 }
 
 body {
-  overflow: hidden;
+  overflow: auto;
 }
+
 
 /* HTML5 display-role reset for older browsers */
 article,
@@ -142,6 +143,7 @@ table {
 body {
   background-color: white;
 }
+
 
 p {
   display: inline-block;

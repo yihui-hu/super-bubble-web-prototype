@@ -4,6 +4,7 @@
   display: grid;
   align-items: center;
   justify-content: center;
+  overflow: auto;
 }
 
 .superBubble {
@@ -25,7 +26,7 @@
   row-gap: 8px;
   column-gap: 8px;
 
-  overflow: hidden;
+  overflow: scroll;
 }
 
 .pill {

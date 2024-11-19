@@ -14,6 +14,11 @@ const MAX_WIDTH = isMobile ? 300 : 375;
 const VELOCITY_THRESHOLD = 40;
 const WIDTH_THRESHOLD = MAX_WIDTH / 2;
 const LINK_PREVIEW_HEIGHT = isMobile ? 132 : 148;
+const aspectRatio = 612 / 612;
+
+// Calculate height based on the MAX_WIDTH and aspect ratio
+const calculatedHeight = MAX_WIDTH / aspectRatio;
+
 
 enum Swipe {
   toLeft,
@@ -23,64 +28,44 @@ enum Swipe {
 enum AttachmentType {
   Image,
   Link,
+  Video,
 }
 
 interface Attachment {
   type: AttachmentType;
   height: number;
-  imgUrl: string; // For image to display in pill, use local SVGs / PNGs for icons or images
+  imgUrl?: string; // For image to display in pill, use local SVGs / PNGs for icons or images
   url: string | undefined; // For links, so undefined for other attachmentTypes
   title: string;
   pillText: string;
   description: string;
+  videoUrl?: string;
+  x: number;
 }
 
 // Media items / attachments
-const items: [Attachment] = [
+const items: Attachment[] = [
   {
-    type: AttachmentType.Image,
-    height: (MAX_WIDTH / 2300) * 2300,
-    imgUrl: "vibes.png",
-    title: "vibes.png",
-    description: "vibes.png",
-    pillText: "vibes.png",
+    type: AttachmentType.Video,
+    height: calculatedHeight,
+    imgUrl: "https://typowebsitevideo.s3.amazonaws.com/video.gif",
+    title: "video.mov",
+    description: "video.mov",
+    pillText: "video.mov",
     url: undefined,
+    videoUrl: "https://typowebsitevideo.s3.amazonaws.com/video.mov",
+    x: -(MAX_WIDTH * 0),
   },
   {
-    type: AttachmentType.Image,
-    height: (MAX_WIDTH / 3583) * 2395,
-    imgUrl: "studio.webp",
-    title: "studio.webp",
-    description: "studio.webp",
-    pillText: "studio.webp",
+    type: AttachmentType.Video,
+    height: calculatedHeight,
+    imgUrl: "https://typowebsitevideo.s3.amazonaws.com/timestamp.gif",
+    title: "timestamp.mov",
+    description: "timestamp.mov",
+    pillText: "timestamp.mov",
     url: undefined,
-  },
-  {
-    type: AttachmentType.Image,
-    height: (MAX_WIDTH / 2300) * 2300,
-    imgUrl: "art_in_studio.png",
-    title: "art_in_studio.png",
-    description: "art_in_studio.png",
-    pillText: "art_in_studio.png",
-    url: undefined,
-  },
-  {
-    type: AttachmentType.Image,
-    height: (MAX_WIDTH / 3583) * 2395,
-    imgUrl: "standing.webp",
-    title: "standing.webp",
-    description: "standing.webp",
-    pillText: "standing.webp",
-    url: undefined,
-  },
-  {
-    type: AttachmentType.Image,
-    height: (MAX_WIDTH / 3583) * 2395,
-    imgUrl: "homies.webp",
-    title: "homies.webp",
-    description: "homies.webp",
-    pillText: "homies.webp",
-    url: undefined,
+    videoUrl: "https://typowebsitevideo.s3.amazonaws.com/timestamp.MOV",
+    x: -(MAX_WIDTH * 1),
   },
   {
     type: AttachmentType.Link,
@@ -91,25 +76,7 @@ const items: [Attachment] = [
       "The messenger is the killer mobile app, and we are reimagining it as the ultimate creative app. Typo is communication designed for creation.",
     pillText: "typo.by",
     url: "https://typo.by",
-  },
-  {
-    type: AttachmentType.Link,
-    height: LINK_PREVIEW_HEIGHT - (isMobile ? 34 : 44),
-    imgUrl: "instagram.png",
-    title: "Typo* on Instagram",
-    description: "A more ~editorial~ POV",
-    pillText: "instagram.com",
-    url: "https://instagram.com/tyyyyyyyyyyypo",
-  },
-  {
-    type: AttachmentType.Link,
-    height: LINK_PREVIEW_HEIGHT - (isMobile ? 18 : 22),
-    imgUrl: "youtube.webp",
-    title: "Typo* on YouTube",
-    description:
-      "Check out our vlogs for a BTS look at how we're building the company",
-    pillText: "youtube.com",
-    url: "https://www.youtube.com/@tyyyyyyyyyyypo",
+    x: -(MAX_WIDTH * 2),
   },
 ].map((item, index) => ({
   ...item,
@@ -150,8 +117,8 @@ const Bubble = (props: BubbleProps) => {
   const divHeight = useMotionTemplate`${height}px`;
 
   useEffect(() => {
-    controls.start(items[index]);
-    maskControls.start(maskControlsItems[index]);
+    controls.start({ x: items[index].x });
+    maskControls.start({ height: maskControlsItems[index].height });
     setHeight(items[index].height);
   }, [trigger]); // Triggers whenever user selects on a "pill"
 
@@ -223,8 +190,8 @@ const Bubble = (props: BubbleProps) => {
     }
 
     setIndex(newIndex);
-    controls.start(items[newIndex]);
-    maskControls.start(maskControlsItems[newIndex]);
+    controls.start({ x: items[newIndex].x });
+    maskControls.start({ height: maskControlsItems[newIndex].height });
     setHeight(items[newIndex].height);
     setDragging(false);
   };
@@ -270,6 +237,24 @@ const Bubble = (props: BubbleProps) => {
           />
         );
         break;
+        case AttachmentType.Video:
+          thumbnailComponent = (
+            <div
+              className="pillThumbnailContainer"
+              style={{
+                height: isMobile ? 12 : 16,
+                width: isMobile ? 12 : 16,
+                backgroundImage: `url('${attachment.imgUrl}')`,
+                backgroundSize: 'contain', 
+                backgroundPosition: 'center',
+                backgroundRepeat: 'no-repeat'
+              }}
+              
+            />
+            
+          );
+          break;
+        
       default:
         thumbnailComponent = null;
         break;
@@ -311,17 +296,33 @@ const Bubble = (props: BubbleProps) => {
         className="textContainer"
         style={{ width: MAX_WIDTH, fontSize: isMobile ? 12 : 16 }}
       >
-        <p>We work together in IRL in Soho, NYC.</p>
-        <p>Our office doubles as an art studio, film</p>
-        <p>set, and all-around creative space.</p>
+        <p>At Typo* we’re building the best</p>
+        <p>messenger for creative work.</p>
+        <p>Imagine if you could annotate any file</p>
+        <p>you send from your group chat?</p> 
         <Pill attachment={items[0]} />
+        <p> </p>  <p> </p>  <p> </p>  <p> </p>  <p> </p>  <p> </p>  <p> </p>  <p> </p>  <p> </p>   <p> </p>   <p> </p>   <p> </p>   <p> </p>   <p> </p>
+        <p> </p>  <p> </p>  <p> </p>  <p> </p>  <p> </p>  <p> </p>  <p> </p>  <p> </p>  <p> </p>   <p> </p>   <p> </p>   <p> </p>   <p> </p>   <p> </p>
+        <p>Now imagine you could do this for a</p>
+        <p>specific timestamp in a song, or for a  </p>
+        <p>set of frames in a video.</p>
         <Pill attachment={items[1]} />
+        <p>And imagine you could do all of this </p>
+        <p>without ever duplicating a file.</p>
+        <p> </p>  <p> </p>  <p> </p>  <p> </p>  <p> </p>  <p> </p>  <p> </p>  <p> </p>  <p> </p>   <p> </p>   <p> </p>   <p> </p>   <p> </p>   <p> </p>
+        <p> </p>  <p> </p>  <p> </p>  <p> </p>  <p> </p>  <p> </p>  <p> </p>  <p> </p>  <p> </p>   <p> </p>   <p> </p>   <p> </p>   <p> </p>   <p> </p>
+        <p> </p>  <p> </p>  <p> </p>  <p> </p>  <p> </p>  <p> </p>  <p> </p>  <p> </p>  <p> </p>   <p> </p>   <p> </p>   <p> </p>   <p> </p>   <p> </p>
+        <p>We envision a world in which makers </p>
+        <p>only focus on making. No uploading,</p>
+        <p> downloading, sharing, collating, </p>
+        <p>exporting, importing, and wrangling.</p>
+        <p>Oh, and no more scrolling around your</p>
+        <p>messenger searching for the thing.</p>
+        
+        <p> <br></br> If you wanna get more of a vibecheck </p>
+        <p> for us, you can check out: </p>
         <Pill attachment={items[2]} />
-        <Pill attachment={items[3]} />
-        <Pill attachment={items[4]} />
-        <Pill attachment={items[5]} />
-        <Pill attachment={items[6]} />
-        <Pill attachment={items[7]} />
+
       </div>
     );
   };
@@ -418,6 +419,30 @@ const Bubble = (props: BubbleProps) => {
                     />
                   </ControlledZoom>
                 );
+
+                //Preview for Video
+                case AttachmentType.Video:
+                  return (
+                    <div className="video-container" style={{backgroundColor: '#ffffff'}}>
+                      <video
+                        controls
+                        autoPlay  // starts playing automatically
+      loop      // loops the video
+      muted     // necessary for autoplay to work in most browsers
+      playsInline  // prevents fullscreen playback on mobile
+                        style={{
+                          width: MAX_WIDTH,
+                          height: calculatedHeight,
+                          backgroundColor: '#ffffff'  // Ensures video element itself has a white background
+                        }}
+                        src={item.videoUrl}
+                      >
+                        Your browser does not support the video tag.
+                      </video>
+                    </div>
+                  );
+                  
+
               /// Preview component for links
               case AttachmentType.Link:
                 return (
@@ -503,14 +528,14 @@ const SuperBubble = () => {
           const img = new Image();
           img.onload = resolve;
           img.onerror = reject;
-          img.src = image;
+          img.src = image|| "";
         });
       })
     )
       .then(() => {
         setTimeout(() => {
           setLoading(false);
-        }, 2000);
+        }, 1);
       })
       .catch((error) => {
         console.error("Error loading images:", error);
@@ -528,7 +553,7 @@ const SuperBubble = () => {
       animate={{
         opacity: 1,
         filter: "blur(0px)",
-        transition: { type: "spring", duration: 0.7 },
+        transition: { type: "spring", duration: 0.1 },
       }}
     >
       <Bubble
